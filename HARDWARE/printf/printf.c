@@ -223,6 +223,8 @@ void printstr(const char *ptr) //输出字符串
 
 void printfloat(const float flt) //输出浮点数，小数点第5位四舍五入
 { 
+   int i=0;
+
 	int tmpint = (int)flt; 
 	float one_flt = (flt - tmpint)*10;
 	int tmpflt = (int)(100000 * (flt - tmpint)); 
@@ -236,17 +238,19 @@ void printfloat(const float flt) //输出浮点数，小数点第5位四舍五入
 	}
 	
 	printint(tmpint); 
-	putchar('.');
-	
+	putchar('.'); 
 	while(!(int)one_flt)
 	{
+		i++;
+		if(i>4) break;
 		putchar('0');
 		one_flt=one_flt*10;
 	}
 	 
 	printint(tmpflt); 
 
-}  
+} 
+
 
 /*函数名：my_printf      */
 /*功能：打印字符到显示屏上*/

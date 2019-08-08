@@ -40,7 +40,7 @@ void Change_D(float D)  //改变D的数值
    PID.Kd=D;	
 }
 
-/*PID的公式 PID = Kp*error + Ki*累计误差+Kd*(  d(error(t) )/d(t)  ) */
+/*位置式PID的公式 PID = Kp*error + Ki*累计误差+Kd*(  d(error(t) )/d(t)  ) */
 
 int figure_PID(float real_speed,float set_speed)  //real_speed为实际数度，set_speed为设定的速度
 {
@@ -64,3 +64,6 @@ int figure_PID(float real_speed,float set_speed)  //real_speed为实际数度，set_sp
 	
 	return PID.PID_out;        //返回PWM值
 }
+
+
+

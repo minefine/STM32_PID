@@ -85,6 +85,10 @@ int main()  //主函数
   lcd_initial();      //显示屏初始化
 	dsp_single_colour(BLACK);//背景调为黑色
 	
+	//my_printf("f%f\nd%d",101.0123,123);
+	//while(1);
+	
+	
 	mune_init();       //菜单初始化
 
 	

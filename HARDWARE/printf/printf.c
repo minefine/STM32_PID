@@ -1,7 +1,9 @@
 #include "printf.h"
 #include "time_text.h"
 #include "delay.h"
-
+#include <stdlib.h>
+#include <string.h>
+#include <stdarg.h>
 /*24个大写字母*/
 char A[]={0x00,0x00,0x00,0x10,0x10,0x18,0x28,0x28,0x24,0x3C,0x44,0x42,0x42,0xE7,0x00,0x00};/*"A",0*/
 char B[]={0x00,0x00,0x00,0xF8,0x44,0x44,0x44,0x78,0x44,0x42,0x42,0x42,0x44,0xF8,0x00,0x00};/*"B",1*/
@@ -168,64 +170,162 @@ char *same_char(char a)
 	return ying;
 }
 
+void putchar(const char ch) //输出字符
+{ 
+	char *num;
+	char i,j;
+	Lcd_SetRegion(x,y,x+8-1,y+16-1);
+	num=same_char(ch);
+	 for(i=0;i<16;i++)
+		{
+			 for(j=0;j<8;j++)
+			 {
+				if(num[i]&(0x80>>j))	
+			  LCD_WriteData_16Bit(WHITE);
+			  else 
+				LCD_WriteData_16Bit(BLACK);
+
+			 }
+		}
+						
+		x+=8;
+				 
+	 if(x>=128)
+	  {
+			x=0;
+		  y+=16;
+		}
+}
+
+void printch(const char ch) //输出字符
+{ 
+	putchar(ch); 
+} 
+
+void printint(const int dec) //输出整型数
+{ 
+	if(dec == 0) 
+	{ 
+		return; 
+	} 
+	printint(dec / 10); 
+	putchar((char)(dec % 10 + '0')); 
+} 
+
+void printstr(const char *ptr) //输出字符串
+{ 
+	while(*ptr) 
+	{ 
+		putchar(*ptr); 
+		ptr++; 
+	} 
+} 
+
+void printfloat(const float flt) //输出浮点数，小数点第5位四舍五入
+{ 
+	int tmpint = (int)flt; 
+	float one_flt = (flt - tmpint)*10;
+	int tmpflt = (int)(100000 * (flt - tmpint)); 
+	if(tmpflt % 10 >= 5) 
+	{ 
+		tmpflt = tmpflt / 10 + 1; 
+	} 
+	else 
+	{ 
+		tmpflt = tmpflt / 10; 
+	}
+	
+	printint(tmpint); 
+	putchar('.');
+	
+	while(!(int)one_flt)
+	{
+		putchar('0');
+		one_flt=one_flt*10;
+	}
+	 
+	printint(tmpflt); 
+
+}  
+
 /*函数名：my_printf      */
 /*功能：打印字符到显示屏上*/
 /*无返回值               */
-void  my_printf(char *s)
-{
-	char i,j;
-	char *num;
-	
-	while((*s)!='\0')
-	{
-		if(*s!='\n'&&*s!='\b')
-		{
-	     Lcd_SetRegion(x,y,x+8-1,y+16-1);
-		
-		   num=same_char(*s);
-		
-			 for(i=0;i<16;i++)
-				{
-				  for(j=0;j<8;j++)
-				   {
-						  if(num[i]&(0x80>>j))	
-							LCD_WriteData_16Bit(WHITE);
-						  else 
-							LCD_WriteData_16Bit(BLACK);
-
-					 }
-				 }
-						
-					x+=8;
-   				s++;
-				 
-				 if(x>=128)
-				 {
-					 x=0;
-				   y+=16;
-				 }
-				 
-			}	
-     else if(*s=='\n')
-		 {
+void my_printf(const char *format,...) 
+{ 
+	va_list ap; 
+	va_start(ap,format); //将ap指向第一个实际参数的地址
+	while(*format) 
+	{ 
+		if(*format != '%') 
+		{ 
+			if(*format!='\n'&&*format!='\b')
+			{
+			  putchar(*format); 
+			  format++; 
+			}
+	    else if(*format=='\n')
+		  {
 		   x=0;
 			 y+=16;
-			 s++;
-		 }	
-		 else if(*s=='\b')
-		 {
+			 format++;
+		  }	
+		  else if(*format=='\b')
+		  {
 		   x-=8;
 			 if(x<=0)
 			 {
 			   x=120;
 				 y-=16;
 			 }
-			 s++;
-		 }
-   	 
+			format++;
+		  }		
+		} 
+		else 
+		{ 
+			format++; 
+			switch(*format) 
+			{ 
+			case 'c': 
+				{ 
+					char valch = va_arg(ap,int); //记录当前实践参数所在地址
+					printch(valch); 
+					format++; 
+					break; 
+				} 
+			case 'd': 
+				{ 
+					int valint = va_arg(ap,int); 
+					printint(valint); 
+					format++; 
+					break; 
+				} 
+			case 's': 
+				{ 
+					char *valstr = va_arg(ap,char *); 
+					printstr(valstr); 
+					format++; 
+					break; 
+				} 
+			case 'f': 
+				{ 
+					float valflt = va_arg(ap,double); 
+					printfloat(valflt); 
+					format++; 
+					break; 
+				} 
+			default: 
+				{ 
+					printch(*format); 
+					format++; 
+				} 
+			} 
+		} 
 	}
+	va_end(ap); 
+} 
 	 //x=0;y=0;	
-}
+
 
 /*向下一行*/
 void down_line(void)

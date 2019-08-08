@@ -398,7 +398,7 @@ void ZXT(float speed)
 	 Last_y=Y;
 }
 
-void ZXT_QL(void) //坐标清零
+void ZXT_QL(void) //坐标7清零
 {
   X=0;
 	Y=0;

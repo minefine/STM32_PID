@@ -4,7 +4,7 @@
 #include "sys.h"
 #include "LCD.h"
 
-void  my_printf(char *s);
+void my_printf(const char *format,...);
 char *same_char(char a);
 void down_line(void);
 void up_line(void);

@@ -39,3 +39,6 @@
 ..\obj\printf.o: ..\HARDWARE\LCD\LCD.h
 ..\obj\printf.o: ..\HARDWARE\TIME_text\time_text.h
 ..\obj\printf.o: ..\SYSTEM\delay\delay.h
+..\obj\printf.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+..\obj\printf.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+..\obj\printf.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h

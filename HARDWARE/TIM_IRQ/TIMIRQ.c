@@ -66,8 +66,13 @@ void TIM3_IRQHandler(void)  //TIM4中断
 			{
 		    pwm=0;
 			}
+			else if(pwm>300)
+			{
+			  pwm=300;
+			}
 			
-	  //printf("当前转速：%f    PWM：%d  set_speed:%f   TIM4->CNT=%d\r\n",a,pwm,set_speed,TIM4->CNT);  //通过串口打印转速	
+			delay_ms(5);
+	   //printf("当前转速：%f    PWM：%d  set_speed:%f   TIM4->CNT=%d  ZXT_flag=%d\r\n",a,pwm,set_speed,TIM4->CNT,ZXT_flag);  //通过串口打印转速	
 	
 	   ZXT(a);
 		 TIM_SetCompare1(TIM10,pwm);  //改变占空比

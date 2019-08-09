@@ -9,4 +9,5 @@ int figure_PID(float real_speed,float set_speed);
 void Change_P(float P);
 void Change_I(float I);
 void Change_D(float D);
+void Change_add_error(float P);
 #endif

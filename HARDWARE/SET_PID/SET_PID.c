@@ -16,7 +16,7 @@
 
 #include "usart.h"
 
-char str[20];
+u8 *str=USART_RX_BUF;
 
 float set_speed=0;  //设定速度值
 
@@ -44,13 +44,27 @@ extern float TIM5_Speed_i;
 void SET_PID(void)
 {
 	unsigned char key;
-	float vv;
-	
+	float vv;int i=0;
+	Change_add_error(0);  //清零  防止累计效应
     show_init();
 	
 		while(1)	
 		{
+			delay_ms(10);
+		if(USART_RX_STA&0X8000)	
+		{
+     	str=USART_RX_BUF;
 			
+		  printf("%s\n",str);
+			USART_RX_STA=0;
+    }
+		else{
+			USART_RX_STA=0;
+	  while(USART_RX_BUF[i]!='\0')
+			{
+			   USART_RX_BUF[i++]='\0';
+			}
+		}
 			ZXT_flag=1;  //打开折线图
 			
 			key=KEY_scan();
@@ -88,7 +102,6 @@ void SET_PID(void)
 			 
 			 if(str[0]=='V')
 			 {
-				 printf("%s",str);
 				 Read_USART_str();
 			   E2Write_long(0X38,JG);//固定只写八个字符 
 				 vv=atof(JG);
@@ -109,7 +122,7 @@ void SET_PID(void)
 void SET_angle(void)
 {
 	
-	unsigned char key,i=0,j=0;
+	unsigned char key,i=0;
 	int angle;
 	char k[3];
 	TIM4->CNT=30000;
@@ -122,10 +135,20 @@ void SET_angle(void)
 	  
     AG_show_init();
 	
+	
 		while(1)	
 		{
 			ZXT_flag=0;  //折线图
 			
+		  delay_ms(10);
+		if(USART_RX_STA&0X8000)	
+		{
+     	str=USART_RX_BUF;
+			
+		  printf("%s\n",str);
+			USART_RX_STA=0;
+    }
+
 			key=KEY_scan();
 			
        switch(key)  //键值，提供功能
@@ -155,12 +178,8 @@ void SET_angle(void)
         AG_show_init();
 			 }
 			 
-	
-	
-	
-	      
-	
-
+			TIM_SetCompare1(TIM10,500);  //改变占空比
+	    TIM_SetCompare1(TIM11,500);  //改变占空比
 			
 			 MY_USART_Change_PIDtwo();
 			 if(str[0]=='a')
@@ -169,26 +188,26 @@ void SET_angle(void)
 				 {
 				   k[i]=str[i+1];
 				 }
-				 angle=atoi(k);
-				printf("angle: %d \n",angle);
+				
+				  angle=atoi(k);
 				 
-         if(j==2)
-				 {
+				  printf("k=%d\r\n",angle);
+
 			    str[0]='\0';
           str[1]='\0';	
           str[2]='\0';
           str[3]='\0';
-					 AG_ZD(angle);
-					 j=0;
-				 }	
-         j++;				 
-				/* printf("  str:%c",JG[1]);
-				 
-	
-			   
-				
-*/
+					AG_ZD(angle);			 
+				/* printf("  str:%c",JG[1]);*/
+
 			 }
+			 
+			 USART_RX_STA=0;
+			while(USART_RX_BUF[i]!='\0')
+			{
+			   USART_RX_BUF[i++]='\0';
+			}
+			i=0;
 			 
 		}
 }
@@ -198,9 +217,9 @@ void MY_USART_Change_PID(void)
 {
  	float pp,ii,dd;
 	
+	
 			 if(str[0]=='P')
 			 {
-				 printf("%s",str);
          Read_USART_str();
 			   E2Write_long(0X00,JG);//固定只写八个字符
 				 delay_ms(10);
@@ -216,7 +235,6 @@ void MY_USART_Change_PID(void)
 			 
 			 if(str[0]=='I')
 			 {
-				 printf("%s",str);
 				 Read_USART_str();
 			   E2Write_long(0X08,JG);//固定只写八个字符					 
 				 ii=atof(JG);
@@ -231,7 +249,6 @@ void MY_USART_Change_PID(void)
 			 
 			 if(str[0]=='D')
 			 {
-				 printf("%s",str);
 				 Read_USART_str();
 			    E2Write_long(0X30,JG);//固定只写八个字符 
 				 dd=atof(JG);
@@ -252,9 +269,27 @@ void MY_USART_Change_PIDtwo(void)
 {
  	float pp,ii,dd;
 	
+	
+		int i=0;
+	//printf("kikikikiki");
+	 delay_ms(10);
+	 if(USART_RX_STA&0X8000)	
+		{
+     	str=USART_RX_BUF;
+		  printf("%s\n",str);
+			USART_RX_STA=0;
+    }
+		else{
+	  while(USART_RX_BUF[i]!='\0')
+			{
+			   USART_RX_BUF[i++]='\0';
+			}
+		 i=0;
+			
+		}
+	
 			 if(str[0]=='P')
 			 {
-				 printf("%s",str);
          Read_USART_str();
 			   E2Write_long(0X00,JG);//固定只写八个字符
 				 delay_ms(10);
@@ -270,7 +305,6 @@ void MY_USART_Change_PIDtwo(void)
 			 
 			 if(str[0]=='I')
 			 {
-				 printf("%s",str);
 				 Read_USART_str();
 			   E2Write_long(0X08,JG);//固定只写八个字符					 
 				 ii=atof(JG);
@@ -285,7 +319,6 @@ void MY_USART_Change_PIDtwo(void)
 			 
 			 if(str[0]=='D')
 			 {
-				 printf("%s",str);
 				 Read_USART_str();
 			    E2Write_long(0X30,JG);//固定只写八个字符 
 				 dd=atof(JG);
@@ -787,7 +820,7 @@ void myset_AG(void)
 	int angle;
 	int next_cnt;
 	int this_cnt;
-	
+	int PWM;
 	ZXT_flag=0;  //关闭折线图
 	
 	qingling();
@@ -804,8 +837,6 @@ void myset_AG(void)
 	
 	 while(1)
 		{
-			
-			
 			key=KEY_scan();
        switch(key)
 		   { 
@@ -826,15 +857,22 @@ void myset_AG(void)
 				 angle = atoi(JG);
 				 
 				 TIM5_Speed_i=0;
-				 next_cnt=( angle * 1.22 );
+				 next_cnt=( angle *260/360 );
 				 
 				 this_cnt= TIM5_Speed_i;
 				 
 				 while(this_cnt<=next_cnt)
 				 {
 				   this_cnt= TIM5_Speed_i;
-					 TIM_SetCompare1(TIM10,200);  //改变占空比	
+					 PWM=-figure_PID(this_cnt,next_cnt);
+					 if(PWM<0)
+						 PWM=0;
+					 
+					 
+					 TIM_SetCompare1(TIM10,PWM);  //改变占空比	
 			     TIM_SetCompare1(TIM11,500);  //改变占空比	
+           //delay_ms(1);
+           //printf("%d\n",PWM);					 
 				 }
 	       	TIM_SetCompare1(TIM10,500);  //改变占空比	
 			    TIM_SetCompare1(TIM11,500);  //改变占空比	
@@ -851,6 +889,7 @@ void AG_ZD(int angle)
 	char a[3];
 	int next_cnt;
 	int this_cnt;
+	int PWM;
 
 	//angle = 360;
 	
@@ -858,22 +897,29 @@ void AG_ZD(int angle)
 	
 	qingling();
 	
-	my_printf("\n4.");
+	my_printf("\n4.A");
 	
-	TIM5_Speed_i=0;
-	next_cnt=( angle * 1.22 );
-				 
-	this_cnt= TIM5_Speed_i;
-				 
-	while(this_cnt<=next_cnt)
-	{
-	  this_cnt= TIM5_Speed_i;
-		TIM_SetCompare1(TIM10,150);  //改变占空比	
-	  TIM_SetCompare1(TIM11,500);  //改变占空比	
-  }
+	 TIM5_Speed_i=0;
+	 next_cnt=( angle *260/360 );
+	 
+	 this_cnt= TIM5_Speed_i;
+	 
+	 while(this_cnt<=next_cnt)
+	 {
+		 this_cnt= TIM5_Speed_i;
+		 PWM=-figure_PID(this_cnt,next_cnt);
+		 if(PWM<0)
+			 PWM=0;
+		 
+		 
+		 TIM_SetCompare1(TIM10,PWM);  //改变占空比	
+		 TIM_SetCompare1(TIM11,500);  //改变占空比	
+		 //delay_ms(1);
+		 //printf("%d\n",PWM);					 
+	 }
 		TIM_SetCompare1(TIM10,500);  //改变占空比	
-	  TIM_SetCompare1(TIM11,500);  //改变占空比	
-	
+		TIM_SetCompare1(TIM11,500);  //改变占空比	
+
 		SET_i=1;
 		qingling();
     AG_show_init();
@@ -882,33 +928,5 @@ void AG_ZD(int angle)
 	
 
 
-
-/*用空格做结束符*/
-
-
-void USART1_IRQHandler(void)                	//串口1中断服务程序
-{
-	u8 Res;
-	static int  i=0;
-
-	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)  //接收中断(接收到的数据必须是0x0d 0x0a结尾)
-	{
-		Res =USART_ReceiveData(USART1);//(USART1->DR);	//读取接收到的数据
-		
-		str[i++]=Res;
-   if(str[i-1]!=' ')
-		{
-			USART_SendData(USART1,str[i-1]);
-	  }
-		else
-		{ 
-			str[i]='\0';
-			USART_SendData(USART1,'A');
-			i=0;		  
-		}
-		
-	 // printf(" i=%d \r\n",i);
-	}
-}
 
 

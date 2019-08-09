@@ -58,7 +58,7 @@ float TIM5_Speed_i=0;
 void TIM4_IRQHandler(void)
 {	
   TIM5_Speed_i++;
-	LED0=~LED0;
+	LED0=!LED0;
 	TIM_ClearITPendingBit(TIM4, TIM_IT_CC1|TIM_IT_Update); //清除中断标志位
 }
 

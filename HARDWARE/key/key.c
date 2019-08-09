@@ -41,7 +41,7 @@ unsigned char KEY_scan(void)//最好放到中断中使用
 	
      if(IN_KEY1 == 0||IN_KEY2 == 0||IN_KEY3 == 0)
 	   {
-	    delay_ms(8); //延时消抖
+	    delay_ms(2); //延时消抖
 		
       if(IN_KEY1==0)
 		  {

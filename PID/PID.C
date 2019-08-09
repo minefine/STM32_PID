@@ -12,7 +12,7 @@ static struct {
    float I_out;    
 	 float D_out;
 	 float PID_out;
-	
+	 float add_error;          //累计误差
 }PID;
 
 void PID_Init(float P,float I,float D)  //数值的初始化
@@ -30,6 +30,11 @@ void Change_P(float P)  //改变P的数值
    PID.Kp=P;
 }
 
+void Change_add_error(float P)  //改变add_error的数值
+{
+   PID.add_error=P;
+}
+
 void Change_I(float I)  //改变I的数值
 {
    PID.Ki=I;
@@ -44,17 +49,16 @@ void Change_D(float D)  //改变D的数值
 
 int figure_PID(float real_speed,float set_speed)  //real_speed为实际数度，set_speed为设定的速度
 {
-	static float add_error;          //累计误差
 	
   PID.error=set_speed-real_speed;  //计算误差值
 	
 	PID.P_out=PID.Kp*PID.error;      //计算Kp的输出
 	
-	add_error+=PID.error;            //计算累计误差
-	PID.I_out=PID.Ki*add_error;      //计算Ki的输出
+	PID.add_error+=PID.error;            //计算累计误差
+	PID.I_out=PID.Ki*PID.add_error;      //计算Ki的输出
 		
-	add_error+=PID.error;            //计算累计误差
-	PID.I_out=PID.Ki*add_error;      //计算Ki的输出
+	PID.add_error+=PID.error;            //计算累计误差
+	PID.I_out=PID.Ki*PID.add_error;      //计算Ki的输出
 	
 	PID.D_out=PID.Kd*(PID.error-PID.last_error);//计算Kd的输出
 	

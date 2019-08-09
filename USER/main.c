@@ -55,7 +55,7 @@ int main()  //主函数
 	
 	IIC_Init();	
 	 
-	for(i=0;i<8;i++)                 //读取P的值 并将其转化为浮点数
+	/*for(i=0;i<8;i++)                 //读取P的值 并将其转化为浮点数
 	E2str[i] = E2ReadByte(0x00+i);
   PID_set_P = atof(E2str);
 	
@@ -67,7 +67,7 @@ int main()  //主函数
 	E2str[i] = E2ReadByte(0x30+i);
   PID_set_P = atof(E2str);
 	
-	PID_Init(PID_set_P,PID_set_I,PID_set_D);
+	PID_Init(PID_set_P,PID_set_I,PID_set_D);*/
 	
 	KEY_Init();
 	

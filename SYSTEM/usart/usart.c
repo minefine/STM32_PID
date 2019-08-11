@@ -1,5 +1,7 @@
 #include "sys.h"
 #include "usart.h"	
+#include "delay.h"
+#include <stdarg.h>
 ////////////////////////////////////////////////////////////////////////////////// 	 
 //如果使用ucos,则包括下面的头文件即可.
 #if SYSTEM_SUPPORT_OS
@@ -116,6 +118,128 @@ void uart_init(u32 bound){
 #endif
 	
 }
+
+static int x=0,y=0;
+
+void MY_putchar(const char ch) //输出字符
+{ 
+	while((USART1->SR&0X40)==0);//循环发送,直到发送完毕  =1 表示数据已经接收完成
+  USART1->DR = (u8) ch; 
+}
+
+void MY_printch(const char ch) //输出字符
+{ 
+	MY_putchar(ch); 
+} 
+
+void MY_printint(const int dec) //输出整型数
+{ 
+	if(dec == 0) 
+	{ 
+		return; 
+	} 
+	MY_printint(dec / 10); 
+	MY_putchar((char)(dec % 10 + '0')); 
+} 
+
+void MY_printstr(const char *ptr) //输出字符串
+{ 
+	while(*ptr) 
+	{ 
+		MY_putchar(*ptr); 
+		ptr++; 
+	} 
+} 
+
+void MY_printfloat(const float flt) //输出浮点数，小数点第5位四舍五入
+{ 
+   int i=0;
+
+	int tmpint = (int)flt; 
+	float one_flt = (flt - tmpint)*10;
+	int tmpflt = (int)(100000 * (flt - tmpint)); 
+	if(tmpflt % 10 >= 5) 
+	{ 
+		tmpflt = tmpflt / 10 + 1; 
+	} 
+	else 
+	{ 
+		tmpflt = tmpflt / 10; 
+	}
+	
+	MY_printint(tmpint); 
+	MY_putchar('.'); 
+	while(!(int)one_flt)
+	{
+		i++;
+		if(i>4) break;
+		MY_putchar('0');
+		one_flt=one_flt*10;
+	}
+	 
+	MY_printint(tmpflt); 
+
+} 
+
+
+/*函数名：USRAT_printf   */
+/*功能：通过串口打印字符  */
+/*无返回值               */
+void USRAT_printf(const char *format,...) 
+{ 
+	va_list ap; 
+	va_start(ap,format); //将ap指向第一个实际参数的地址
+	while(*format) 
+	{ 
+		if(*format != '%') 
+		{ 
+			  MY_putchar(*format); 
+			  format++; 
+		} 
+		else 
+		{ 
+			format++; 
+			switch(*format) 
+			{ 
+			case 'c': 
+				{ 
+					char valch = va_arg(ap,int); //记录当前实践参数所在地址
+					MY_printch(valch); 
+					format++; 
+					break; 
+				} 
+			case 'd': 
+				{ 
+					int valint = va_arg(ap,int); 
+					MY_printint(valint); 
+					format++; 
+					break; 
+				} 
+			case 's': 
+				{ 
+					char *valstr = va_arg(ap,char *); 
+					MY_printstr(valstr); 
+					format++; 
+					break; 
+				} 
+			case 'f': 
+				{ 
+					float valflt = va_arg(ap,double); 
+					MY_printfloat(valflt); 
+					format++; 
+					break; 
+				} 
+			default: 
+				{ 
+					MY_printch(*format); 
+					format++; 
+				} 
+			} 
+		} 
+	}
+	va_end(ap); 
+} 
+
 
 
 void USART1_IRQHandler(void)                	//串口1中断服务程序

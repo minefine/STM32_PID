@@ -54,20 +54,6 @@ int main()  //主函数
 	uart_init(115200);
 	
 	IIC_Init();	
-	 
-	/*for(i=0;i<8;i++)                 //读取P的值 并将其转化为浮点数
-	E2str[i] = E2ReadByte(0x00+i);
-  PID_set_P = atof(E2str);
-	
-	for(i=0;i<8;i++)                 //读取I的值 并将其转化为浮点数
-	E2str[i] = E2ReadByte(0x08+i);
-  PID_set_P = atof(E2str);
-	
-  for(i=0;i<8;i++)                 //读取D的值 并将其转化为浮点数
-	E2str[i] = E2ReadByte(0x30+i);
-  PID_set_P = atof(E2str);
-	
-	PID_Init(PID_set_P,PID_set_I,PID_set_D);*/
 	
 	KEY_Init();
 	
@@ -84,10 +70,6 @@ int main()  //主函数
 	
   lcd_initial();      //显示屏初始化
 	dsp_single_colour(BLACK);//背景调为黑色
-	
-	//my_printf("f%f\nd%d",101.0123,123);
-	//while(1);
-	
 	
 	mune_init();       //菜单初始化
 

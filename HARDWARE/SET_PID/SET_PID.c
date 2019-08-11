@@ -55,7 +55,7 @@ void SET_PID(void)
 		{
      	str=USART_RX_BUF;
 			
-		  printf("%s\n",str);
+		  USRAT_printf("%s\n",str);
 			USART_RX_STA=0;
     }
 		else{
@@ -145,7 +145,7 @@ void SET_angle(void)
 		{
      	str=USART_RX_BUF;
 			
-		  printf("%s\n",str);
+		  USRAT_printf("%s\n",str);
 			USART_RX_STA=0;
     }
 
@@ -191,14 +191,14 @@ void SET_angle(void)
 				
 				  angle=atoi(k);
 				 
-				  printf("k=%d\r\n",angle);
+				  USRAT_printf("k=%d\r\n",angle);
 
 			    str[0]='\0';
           str[1]='\0';	
           str[2]='\0';
           str[3]='\0';
 					AG_ZD(angle);			 
-				/* printf("  str:%c",JG[1]);*/
+				/* USRAT_printf("  str:%c",JG[1]);*/
 
 			 }
 			 
@@ -271,12 +271,12 @@ void MY_USART_Change_PIDtwo(void)
 	
 	
 		int i=0;
-	//printf("kikikikiki");
+	//USRAT_printf("kikikikiki");
 	 delay_ms(10);
 	 if(USART_RX_STA&0X8000)	
 		{
      	str=USART_RX_BUF;
-		  printf("%s\n",str);
+		  USRAT_printf("%s\n",str);
 			USART_RX_STA=0;
     }
 		else{
@@ -872,7 +872,7 @@ void myset_AG(void)
 					 TIM_SetCompare1(TIM10,PWM);  //改变占空比	
 			     TIM_SetCompare1(TIM11,500);  //改变占空比	
            //delay_ms(1);
-           //printf("%d\n",PWM);					 
+           //USRAT_printf("%d\n",PWM);					 
 				 }
 	       	TIM_SetCompare1(TIM10,500);  //改变占空比	
 			    TIM_SetCompare1(TIM11,500);  //改变占空比	
@@ -915,7 +915,7 @@ void AG_ZD(int angle)
 		 TIM_SetCompare1(TIM10,PWM);  //改变占空比	
 		 TIM_SetCompare1(TIM11,500);  //改变占空比	
 		 //delay_ms(1);
-		 //printf("%d\n",PWM);					 
+		 //USRAT_printf("%d\n",PWM);					 
 	 }
 		TIM_SetCompare1(TIM10,500);  //改变占空比	
 		TIM_SetCompare1(TIM11,500);  //改变占空比	

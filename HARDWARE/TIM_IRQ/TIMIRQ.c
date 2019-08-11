@@ -72,7 +72,7 @@ void TIM3_IRQHandler(void)  //TIM4中断
 			}
 			
 			delay_ms(5);
-	   //printf("当前转速：%f    PWM：%d  set_speed:%f   TIM4->CNT=%d  ZXT_flag=%d\r\n",a,pwm,set_speed,TIM4->CNT,ZXT_flag);  //通过串口打印转速	
+	   //USRAT_printf("当前转速：%f    PWM：%d  set_speed:%f   TIM4->CNT=%d  ZXT_flag=%d\r\n",a,pwm,set_speed,TIM4->CNT,ZXT_flag);  //通过串口打印转速	
 	
 	   ZXT(a);
 		 TIM_SetCompare1(TIM10,pwm);  //改变占空比

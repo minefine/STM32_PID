@@ -3,7 +3,7 @@
 
 #include "sys.h" 
 
-void PID_Init(float P,float I,float D);
+void PID_Init();
 void Change_PID(float P,float I,float D);
 int figure_PID(float real_speed,float set_speed);
 void Change_P(float P);

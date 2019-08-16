@@ -51,13 +51,14 @@ void SET_PID(void)
 		while(1)	
 		{
 			delay_ms(10);
-		if(USART_RX_STA&0X8000)	
-		{
+			
+			if(USART_RX_STA&0x4000)//接收到了0x0d
+			{
      	str=USART_RX_BUF;
 			
 		  USRAT_printf("%s\n",str);
 			USART_RX_STA=0;
-    }
+      }
 		else{
 			USART_RX_STA=0;
 	  while(USART_RX_BUF[i]!='\0')
@@ -65,6 +66,8 @@ void SET_PID(void)
 			   USART_RX_BUF[i++]='\0';
 			}
 		}
+		
+		
 			ZXT_flag=1;  //打开折线图
 			
 			key=KEY_scan();
@@ -141,13 +144,20 @@ void SET_angle(void)
 			ZXT_flag=0;  //折线图
 			
 		  delay_ms(10);
-		if(USART_RX_STA&0X8000)	
-		{
+			if(USART_RX_STA&0x4000)//接收到了0x0d
+			{
      	str=USART_RX_BUF;
 			
 		  USRAT_printf("%s\n",str);
 			USART_RX_STA=0;
-    }
+      }
+		else{
+			USART_RX_STA=0;
+	  while(USART_RX_BUF[i]!='\0')
+			{
+			   USART_RX_BUF[i++]='\0';
+			}
+		}
 
 			key=KEY_scan();
 			

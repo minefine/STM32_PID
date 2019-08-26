@@ -17,9 +17,8 @@ extern char ZXT_flag;
 extern float TIM5_Speed_i;
 extern float set_speed;
 extern int set_AG;
-float a;
 
-int pwm;
+static int pwm;
 
 void TIM3_Int_Init(u32 arr,u32 psc)
 {
@@ -50,19 +49,25 @@ void TIM3_Int_Init(u32 arr,u32 psc)
 
 void TIM3_IRQHandler(void)  //TIM4中断
 {
-
+	static float a;
+	static char i=0;
    LED1=!LED1;    //使用绿灯观察程序的执行情况
 	
+  i++;
+  i=i%4;	
 	
-	if(ZXT_flag==1)     //0为不画折线图 1为画折线图
-	 {
+	
+	if(ZXT_flag==1&&i==1)     //0为不画折线图 1为画折线图
+	 { 
 		 a=TIM4->CNT;
 	   a=a-30000;
 		 
-		 
-		 a=(a/(26*20))*10;  //10为10个周期为一秒, 
+		 printf("%d\n", TIM4->CNT);  
+	
+		 a=(a/(26*40))*10;  //10为10个周期为一秒,
+		
 		 pwm=-figure_PID(a,set_speed); //计算pwm值
-	     delay_ms(1); 
+	      
 		 //printf("%f\n",a);
 	    if(pwm<=0)
 			{
@@ -72,15 +77,13 @@ void TIM3_IRQHandler(void)  //TIM4中断
 			{
 			  pwm=300;
 			}
-			
-			delay_ms(5);
+		
 	  // USRAT_printf("当前转速：%f    PWM：%d  set_speed:%f   TIM4->CNT=%d  ZXT_flag=%d\r\n",a,pwm,set_speed,TIM4->CNT,ZXT_flag);  //通过串口打印转速	
 	
 	   ZXT(a);
 		 TIM_SetCompare1(TIM10,pwm);  //改变占空比
 		 TIM4->CNT=30000;//初始化中间值，防止溢出
 	 }
-	
 	TIM_ClearITPendingBit(TIM3,TIM_IT_Update);  //清零中断标志位
 }	
 

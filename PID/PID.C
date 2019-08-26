@@ -18,9 +18,9 @@ static struct {
 
 void PID_Init()  //数值的初始化
 {
-  PID.Kp=0;
-  PID.Ki=0;
-  PID.Kd=0;
+//  PID.Kp=0;
+//  PID.Ki=0;
+//  PID.Kd=0;
   PID.last_error=0;
   PID.error=0;
   PID.last_last_error=0;
@@ -45,7 +45,6 @@ void Change_D(float D)  //改变D的数值
 {
    PID.Kd=D;	
 }
-
 /*位置式PID的公式 PID = Kp*error + Ki*累计误差+Kd*(  d(error(t) )/d(t)  ) */
 
 /*int figure_PID(float real_speed,float set_speed)  //real_speed为实际数度，set_speed为设定的速度
@@ -79,8 +78,8 @@ int figure_PID(float real_speed,float set_speed)  //real_speed为实际数度，set_sp
 	
 	 PID.error=set_speed-real_speed;  //计算误差值
 	
-	 //printf("%f\n", PID.error);  
-	
+//	 printf("%f\n", PID.error);  
+//	
    increment_speed =  (PID.Kp*PID.error) + (PID.Ki*PID.last_error) +(PID.last_last_error*PID.Kd);
 	
 	 PID.PID_out += increment_speed;

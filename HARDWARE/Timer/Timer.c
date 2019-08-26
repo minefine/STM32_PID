@@ -42,7 +42,7 @@ void TIM4_Init_encoder(void)
 	TIM_ITConfig(TIM4,TIM_IT_Update|TIM_IT_CC1,ENABLE);
 	
 	NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn;       //中断 红灯亮  观察程序的执行效果
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=2;//抢占优先级3
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=0;//抢占优先级3
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority =0;		//子优先级3
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
 	NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始化VIC寄存器

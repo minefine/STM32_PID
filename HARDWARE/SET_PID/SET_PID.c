@@ -45,7 +45,7 @@ void SET_PID(void)
 {
 	unsigned char key;
 	float vv;int i=0;
-	Change_add_error(0);  //清零  防止累计效应
+	//PID_Init();
     show_init();
 	
 		while(1)	
